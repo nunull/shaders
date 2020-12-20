@@ -144,14 +144,14 @@ void main() {
 
     if (dist > MAX_DIST - EPSILON) {
         // Didn't hit anything
-        gl_FragColor = vec4(.2, .4, .2, 1.0);
+        gl_FragColor = vec4(.2, 1.0);
 		    return;
     }
 
     // The closest point on the surface to the eyepoint along the view ray
     vec3 p = eye + dist * dir;
 
-    vec3 K_a = vec3(0.3, 0.4, cos(time));
+    vec3 K_a = vec3(cos(time)/8.);
     // vec3 K_d = vec3(0.7, 0.2, 0.2);
     vec3 K_d = vec3(
       0.2,
