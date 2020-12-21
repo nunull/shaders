@@ -38,10 +38,11 @@ vec3 opTwist(vec3 p)
 float scene(vec3 p) {
   float posx = sin(time)+cos(time)*cos(time);
   float posx2 = cos(time)+cos(time)*cos(time);
+  float s = .35;
   vec3 q = opTwist(p);
   return opSmoothUnion(
     sphere(q+vec3(posx, .1, 0.)),
-    sdBox(p+vec3(-posx2, .1, 0.5), vec3(.5, .5, .5)),
+    sdBox(p+vec3(-posx2, .2, s), vec3(s)),
     0.8);
 }
 
@@ -144,7 +145,7 @@ void main() {
 
     if (dist > MAX_DIST - EPSILON) {
         // Didn't hit anything
-        gl_FragColor = vec4(.2, 1.0);
+        gl_FragColor = vec4(.1);
 		    return;
     }
 
@@ -153,14 +154,19 @@ void main() {
 
     vec3 K_a = vec3(cos(time)/8.);
     // vec3 K_d = vec3(0.7, 0.2, 0.2);
-    vec3 K_d = vec3(
-      0.2,
-      abs(sin(gl_FragCoord.x / resolution.x + time)),
-      abs(sin(gl_FragCoord.y / resolution.y - time)));
+    vec3 K_d = vec3(abs(sin(gl_FragCoord.x / resolution.x + time))/3.);
     vec3 K_s = vec3(.0, 1.0, 1.0);
     float shininess = 10.0;
 
     vec3 color = phongIllumination(K_a, K_d, K_s, shininess, p, eye);
+
+    // hacky, how does cel shading work correctly?
+    // https://en.wikipedia.org/wiki/Cel_shading
+    if (color.y > .5) color = vec3(1.);
+    else if (color.y > .4) color = vec3(.4);
+    else if (color.y > .2) color = vec3(.2);
+    else if (color.y > .1) color = vec3(.13);
+    else color = vec3(0.);
 
     gl_FragColor = vec4(color, 1.0);
 }
