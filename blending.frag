@@ -10,13 +10,9 @@ const float MIN_DIST = 0.0;
 const float MAX_DIST = 100.0;
 const float EPSILON = 0.0001;
 
-
-
 float sphere(vec3 p) {
   return length(p) - 0.5;
 }
-
-
 
 float sdPlane( vec3 p, vec3 n, float h )
 {
@@ -37,7 +33,7 @@ float opSmoothUnion( float d1, float d2, float k ) {
 
 vec3 opTwist(vec3 p)
 {
-    float k = sin(time)/0.01; // or some other amount
+    float k = sin(cos(time)*6.)/sin(time/10.)*2.; // or some other amount
     float c = cos(k*p.y);
     float s = sin(k*p.y);
     mat2  m = mat2(c,-s,s,c);
@@ -49,20 +45,22 @@ float scene(vec3 p) {
   // p.x = abs(p.x);
   // p.y = abs(p.y);
 
-  vec3 c = vec3(2.+abs(p.x)*.3, 4., 20.);
-  p = mod(p+0.5*c,c)-0.5*c;
+  vec3 c = vec3(4.+abs(p.x)*.5, 6.+p.y*4., 20.);
+  vec3 p2 = mod(p+0.5*c-mod(p.y, 0.5)/2.,c)-0.5*c;
+
+  // if (mod(time, 10.) > 5.) p2 = abs(p2-2.);
 
   for (int i=0; i<3; i++) {
     // p.x *= 1.5;
     // p.y *= 1.2;
-    p = opTwist(p);
+    p2 = opTwist(p2);
   }
 
   float posx = sin(time)+cos(time)*cos(time*1.5);
   float posx2 = cos(time)+cos(time)*cos(time*1.5);
   float s = .3;
-  vec3 q = opTwist(p)+vec3(posx, .1, 0.);
-  vec3 q2 = p+vec3(-posx2, .2, s);
+  vec3 q = opTwist(p2)+vec3(posx, .1, 0.);
+  vec3 q2 = p2+vec3(-posx2, .2, s);
 
   // q.x = abs(q.x);
   // q2.x = abs(q2.x);
@@ -70,11 +68,17 @@ float scene(vec3 p) {
   // q = abs(q-vec3(2., 0., 0.));
   // q2 = abs(q2-vec3(2., 0., 0.));
 
-  return opSmoothUnion(
+  float d1 = opSmoothUnion(
     sphere(q),
     sdBox(q2, vec3(s))-length(p)*0.01,
     0.8);
 
+  float d2 = opSmoothUnion(
+    sphere(p),
+    sdBox(p+vec3(-mod(-p.x, 2.), 0., 0.), vec3(s))-length(p)*0.01,
+    0.8);
+
+  return min(d1, d2);
 }
 
 float shortestDistanceToSurface(vec3 eye, vec3 marchingDirection, float start, float end) {
@@ -171,33 +175,40 @@ vec3 phongIllumination(vec3 k_a, vec3 k_d, vec3 k_s, float alpha, vec3 p, vec3 e
 
 void main() {
   vec3 dir = rayDirection(45.0, resolution.xy, gl_FragCoord.xy);
-    vec3 eye = vec3(0.0, 0.0, 15.0);
+    // vec3 eye = vec3(mod(time, .2)/6.+mod(time, 20.)-10., pow(sin(time/9.), 4.), sin(time)*10.+15.+cos(time/2.)*10.);
+    vec3 eye = vec3(0., 0., 5.);
     float dist = shortestDistanceToSurface(eye, dir, MIN_DIST, MAX_DIST);
 
+    vec3 color = vec3(.0);
     if (dist > MAX_DIST - EPSILON) {
         // Didn't hit anything
-        gl_FragColor = vec4(.02);
-		    return;
+        color = vec3(-0.4);
+        if (mod(gl_FragCoord.x*10., 2.) > 0.5) {
+          gl_FragColor = vec4(.02);
+  		    return;
+        }
     }
 
     // The closest point on the surface to the eyepoint along the view ray
     vec3 p = eye + dist * dir;
 
-    vec3 K_a = vec3(cos(time)/8.);
+    vec3 K_a = vec3(cos(time)/2.);
     // vec3 K_d = vec3(0.7, 0.2, 0.2);
-    vec3 K_d = vec3(abs(sin(gl_FragCoord.x / resolution.x + time))/3.);
-    vec3 K_s = vec3(.0, 1.0, 1.0);
-    float shininess = 10.0;
+    vec3 K_d = vec3(abs(sin(gl_FragCoord.x / resolution.x + time))/1.);
+    vec3 K_s = vec3(
+      abs(sin(gl_FragCoord.x / resolution.x + time)),
+      abs(cos(gl_FragCoord.x / resolution.x))*2., 1.0);
+    float shininess = 40.0;
 
-    vec3 color = phongIllumination(K_a, K_d, K_s, shininess, p, eye);
+    color += phongIllumination(K_a, K_d, K_s, shininess, p, eye);
 
     // hacky, how does cel shading work correctly?
     // https://en.wikipedia.org/wiki/Cel_shading
-    // if (color.y > .5) color = vec3(1.);
-    // else if (color.y > .4) color += vec3(.4);
-    // else if (color.y > .2) color += vec3(.2);
-    // else if (color.y > .1) color += vec3(.13);
-    // else color = vec3(0.);
+    if (color.y > .5) color = vec3(1.);
+    else if (color.y > .4) color += vec3(.4);
+    else if (color.y > .2) color += vec3(.2);
+    else if (color.y > .1) color += vec3(.13);
+    else color = vec3(0.);
 
     gl_FragColor = vec4(color, 1.0);
 }
