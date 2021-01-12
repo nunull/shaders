@@ -3,9 +3,20 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vedajs@0.16.0/lib/index.min.js"></script>
   </head>
   <body>
-    <canvas class="glslCanvas" data-fragment-url="/veda-sample.frag" width="800" height="600"></canvas>
+    <canvas class="glslCanvas" data-fragment-url="/blending.frag" width="800" height="600"></canvas>
+    <script>
+    fetch('blending.frag').then(res => res.text()).then(code => {
+      const veda = new Veda();
+
+      veda.setCanvas(document.querySelector('canvas'));
+      veda.loadFragmentShader(code);
+
+      veda.play();
+    })
+
+    </script>
   </body>
 </html>
