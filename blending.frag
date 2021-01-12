@@ -1,4 +1,4 @@
-/* { "osc": 4000 } */
+/* { ""osc": 4000" } */
 
 precision mediump float;
 
@@ -6,6 +6,7 @@ uniform vec2 resolution;
 uniform float time;
 uniform sampler2D osc_pos1;
 uniform sampler2D osc_pos2;
+uniform sampler2D osc_chaos;
 
 const int MAX_MARCHING_STEPS = 255;
 const float MIN_DIST = 0.0;
@@ -18,6 +19,10 @@ vec2 pos1() {
 
 vec2 pos2() {
   return vec2(texture2D(osc_pos2, vec2(0.)).x, texture2D(osc_pos2, vec2(1.)).x);
+}
+
+float chaos() {
+  return texture2D(osc_chaos, vec2(0.)).x;
 }
 
 float sphere(vec3 p) {
