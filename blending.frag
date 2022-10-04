@@ -14,11 +14,11 @@ const float MAX_DIST = 100.0;
 const float EPSILON = 0.0001;
 
 vec2 pos1() {
-  return vec2(texture2D(osc_pos1, vec2(0.)).x, texture2D(osc_pos1, vec2(1.)).x);
+  return vec2(texture2D(osc_pos1, vec2(0.)).x/2., texture2D(osc_pos1, vec2(1.)).x/2.);
 }
 
 vec2 pos2() {
-  return vec2(texture2D(osc_pos2, vec2(0.)).x, texture2D(osc_pos2, vec2(1.)).x);
+  return vec2(texture2D(osc_pos2, vec2(0.)).x/2., texture2D(osc_pos2, vec2(1.)).x/2.);
 }
 
 float chaos() {
@@ -42,7 +42,7 @@ float opSmoothUnion( float d1, float d2, float k ) {
 
 vec3 opTwist(vec3 p)
 {
-    float k = sin(time)/3.; // or some other amount
+    float k = sin(time)/6.; // or some other amount
     float c = cos(k*p.y);
     float s = sin(k*p.y);
     mat2  m = mat2(c,-s,s,c);
@@ -77,11 +77,18 @@ float scene(vec3 p) {
   vec3 p22 = mod(p+0.5*c-mod(p.y, 0.5)/2.,c)-0.5*c;
   p22 = p*(1.-chaos)+p22*chaos;
 
+  float f = (sin(p.x*sin(time))+1.);
   vec3 q = opTwist(p22);
-  return opSmoothUnion(
+  float d1 = opSmoothUnion(
     sphere(q+p1),
     sdBox(p+p2, vec3(s)),
-    1.4);
+    1.0) * (1. - chaos + f*chaos);
+
+  float d2 = p.y*.2;
+
+  return d1 + d2;
+
+  // return min(d1, d2);
 }
 
 float shortestDistanceToSurface(vec3 eye, vec3 marchingDirection, float start, float end) {
@@ -156,9 +163,9 @@ vec3 phongIllumination(vec3 k_a, vec3 k_d, vec3 k_s, float alpha, vec3 p, vec3 e
     const vec3 ambientLight = 0.5 * vec3(1.0, 1.0, 1.0);
     vec3 color = ambientLight * k_a;
 
-    vec3 light1Pos = vec3(4.0 * sin(time),
+    vec3 light1Pos = vec3(4.0 * sin(0.1*time),
                           2.0,
-                          4.0 * cos(time));
+                          4.0 * cos(0.08*time));
     vec3 light1Intensity = vec3(0.4, 0.4, 0.4);
 
     color += phongContribForLight(k_d, k_s, alpha, p, eye,
@@ -180,6 +187,8 @@ void main() {
   vec3 dir = rayDirection(45.0, resolution.xy, gl_FragCoord.xy);
   vec3 eye = vec3(0.0, 0.0, 5.0);
   float dist = shortestDistanceToSurface(eye, dir, MIN_DIST, MAX_DIST);
+
+  // vec3 color = vec3(sin(time));
 
   if (dist > MAX_DIST - EPSILON) {
       // Didn't hit anything
@@ -208,7 +217,7 @@ void main() {
   else if (color.y > .4) color += vec3(.4);
   else if (color.y > .2) color += vec3(.2);
   else if (color.y > .1) color += vec3(.13);
-  else color = vec3(.04);
+  else color += vec3(.04);
 
-  gl_FragColor = vec4(color, 1.0);
+  gl_FragColor = vec4(color, 1.);
 }
