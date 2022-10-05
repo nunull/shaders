@@ -28,6 +28,7 @@ void main() {
   for (float i = 0.; i < 9.; i++) {
     float r = .2 + sin(time)*cos(time*1.7+i*.1)*.1;
     r += sin(cos(time)+tan(time)*.02)*.1+i*.1;
+    r += tan(time*.01)*.1;
 
     vec2 o = vec2(sin(time * length(uv) * (i+1.) + i))*.1;
 
