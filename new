@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -eo pipefail
+
+date="$(date '+%Y-%m-%d')"
+
+filename="$date.html"
+
+num=1
+while test -f "$filename"; do
+  ((num=num+1))
+  filename="$date-0$num.html"
+done
+
+echo "creating $filename"
+cp template.html "$filename"
