@@ -2,6 +2,19 @@
 	margin: 0;
 	padding: 0;
 	background: black;
+
+	font-family: sans-serif;
+	color: white;
+	text-decoration: none;
+}
+
+ul {
+	margin-bottom: 0.5em;
+	list-style: none;
+}
+
+main {
+	padding: 1rem;
 }
 
 canvas {
