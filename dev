@@ -2,10 +2,6 @@
 
 set -eo pipefail
 
-http-server -p 8001 &
-
 subl .
 
-open http://localhost:8001
-
-wait
+http-server -o -p 8001
