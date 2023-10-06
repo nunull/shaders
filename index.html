@@ -27,7 +27,7 @@
         const name = file.name.replace('.html', '')
         
         const itemElement = document.createElement('li')
-        itemElement.innerHTML = `<a href="${file.path}">${name}</a>`
+        itemElement.innerHTML = `<a href="${window.location.pathname}${file.path}">${name}</a>`
         listElement.appendChild(itemElement)
       }
     })()
