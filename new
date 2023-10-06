@@ -4,13 +4,15 @@ set -eo pipefail
 
 date="$(date '+%Y-%m-%d')"
 
-filename="$date.html"
+sketch="$date"
 
 num=1
-while test -f "$filename"; do
+while test -f "$sketch.html"; do
   ((num=num+1))
-  filename="$date-0$num.html"
+  sketch="$date-0$num"
 done
 
-echo "creating $filename"
-cp template.html "$filename"
+echo "creating $sketch"
+cp template.html "$sketch.html"
+
+echo "<li><a href=\"$sketch.html\">$sketch</a></li>" >> index.html
