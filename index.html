@@ -25,9 +25,18 @@
         if (!file.name.match(/\d{4}-\d{2}-\d{2}/)) continue
 
         const name = file.name.replace('.html', '')
+
+        const anchorElement = document.createElement('a')
+        anchorElement.href = window.location.pathname + file.path
+        anchorElement.innerText = name
+        anchorElement.addEventListener('click', event => {
+          event.preventDefault()
+
+          window.location.href = anchorElement.href
+        })
         
         const itemElement = document.createElement('li')
-        itemElement.innerHTML = `<a href="${window.location.pathname}${file.path}">${name}</a>`
+        itemElement.appendChild(anchorElement)
         listElement.appendChild(itemElement)
       }
     })()
