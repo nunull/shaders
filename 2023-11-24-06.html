@@ -1,0 +1,31 @@
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>shader</title>
+	<link rel="stylesheet" href="style.css">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+  	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+</head>
+<body>
+	<canvas></canvas>
+	
+	<script type="x-shader/x-fragment">
+		precision mediump float;
+
+		uniform vec2 resolution;
+		uniform float time;
+
+		void main() {
+			vec2 uv = gl_FragCoord.xy/resolution.xy;
+
+			float c = 0.;
+			if (mod(gl_FragCoord.x + sin((sin(time*.5+uv.x)*.3*cos(uv.y+time*.2))*.05+cos(time*.1+uv.x*20.)*.01)*.002, 6.5) == 0.) c = 1.;
+
+			gl_FragColor = vec4(vec3(c), 1.);
+		}
+	</script>
+
+	<script src="veda.js"></script>
+</body>
+</html>
