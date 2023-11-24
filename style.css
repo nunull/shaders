@@ -13,6 +13,28 @@ ul {
 	list-style: none;
 }
 
+ul:before {
+	content: '---';
+	display: block;
+	padding-bottom: 0.5em;
+}
+
+li:not(.unsure):not(.yeah) {
+	margin-left: 1ch;
+}
+
+li.unsure:before {
+	content: '(';
+}
+
+li.unsure:after {
+	content: ')';
+}
+
+li.yeah:before {
+	content: '*';
+}
+
 main {
 	padding: 1rem;
 }
