@@ -19,7 +19,8 @@
 		void main() {
 			vec2 uv = gl_FragCoord.xy/resolution.xy;
 
-			float c = 0.;
+			vec2 p = abs(uv - .5 + sin(time*uv.x)*.2);
+			float c = step(length(p), .2);
 			gl_FragColor = vec4(vec3(c), 1.);
 		}
 	</script>
