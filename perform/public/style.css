@@ -1,15 +1,26 @@
+@font-face {
+	font-family: 'Fira Code';
+	src: url('fira/woff2/FiraCode-Light.woff2') format('woff2');
+	font-weight: 300;
+}
+
+@font-face {
+	font-family: 'Fira Code';
+	src: url('fira/woff2/FiraCode-SemiBold.woff2') format('woff2');
+	font-weight: 500;
+}
+
 * {
 	margin: 0;
 	padding: 0;
 
-	font-family: monospace;
-	font-size: 15px;
+	font-family: 'Fira Code', monospace;
+	font-weight: 300;
+	font-size: 16px;
+/*	font-feature-settings: "cv11", "cv14", "onum";*/
+	font-feature-settings: "cv13", "cv14";
 	color: white;
 	text-decoration: none;
-}
-
-h1, h2 {
-	font-weight: normal;
 }
 
 body {
@@ -20,23 +31,137 @@ canvas {
 	position: fixed;
 }
 
+nav {
+	margin: 1rem;
+}
+
+.button {
+	cursor: pointer;
+}
+
+.groups {
+	margin: 1rem;
+	margin-bottom: 0.75rem;
+	gap: 0.75rem;
+	display: flex;
+}
+
 .group {
-	padding: 1rem;
+/*	margin: 1rem;*/
+	border: solid 1px white;
+	padding-bottom: 0.125rem;
 }
 
-.group .param span {
+.group.inactive {
+/*	opacity: 0.5;*/
+/*	border-style: dashed;*/
+/*	border-color: red;*/
+}
+
+.group header {
+	border-bottom: solid 1px white;
+	padding-top: 0.25rem;
+	padding-bottom: 0.125rem;
+	margin-bottom: 0.25rem;
+}
+
+.group.inactive header {
+/*	border-bottom-style: dashed;*/
+/*	border-color: red;*/
+}
+
+.group h1 {
+	display: inline-block;
+	width: 10ch;
+	padding-left: 1ch !important;
+}
+
+.group h1:before {
+	content: '';
+	display: inline-block;
+	width: 1ch;
+	height: 1ch;
+	margin-left: 0.25ch;
+	margin-right: 0.75ch;
+	border-radius: 50%;
+	background: green;
+}
+
+.group.inactive h1:before {
+	background: red;
+}
+
+.group .col-title {
+	display: inline-block;
+	width: 5ch;
+	text-align: right;
+	padding-right: 1ch;
+}
+
+.group .col-title span {
+	font-size: 0.7rem;
+	text-transform: uppercase;
+}
+
+.group .param {
+	cursor: pointer;
+}
+
+.group .param.edited {
+	background: white;
+}
+
+.group .param.edited * {
+	font-weight: 500;
+	color: black;
+}
+
+.group .param h2 {
+	display: inline-block;
+	width: 10ch;
+	padding-left: 1ch;
+}
+
+.group .param .value {
+	display: inline-block;
+	width: 5ch;
 	margin-right: 1ch;
+	text-align: right;
 }
 
-.group .param:not(.changing) :is(.target, .time) {
-	opacity: 0.3;
+/*.group .param .value.time {
+	width: 4ch;
+}*/
+
+/*.group .param .value.time:after {
+	content: 's';
+}*/
+
+.group .param:not(.changing):not(.edited) :is(.target, .time) {
+	color: #444;
 }
 
-.group .param span.edited {
-	opacity: 1 !important;
-	color: red;
+.group .param.changing * {
+	color: pink;
 }
 
-.group .param input {
+/*.group .param .value.edited,*/
+.group .param .value.edited .current-char {
+/*	opacity: 1 !important;*/
+/*	color: red;*/
+/*	font-weight: 500;*/
+}
+
+.group .param .value.edited .current-char {
+/*	background: white;*/
+	color: white;
 	background: black;
+}
+
+iframe {
+	margin-left: 1rem;
+	width: calc(100vw - 2rem);
+	max-width: 1000px;
+	aspect-ratio: 16/9;
+	border: solid 1px white;
 }
