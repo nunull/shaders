@@ -1,0 +1,28 @@
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
+	<title>perform</title>
+</head>
+<body>
+	<main id="app">
+		<div class="group" v-for="group in groups">
+			<h1>a</h1>
+
+			<div class="param" v-for="param in group.params" @click="editParam(param)" :class="{ changing: param.isChanging, edited: !!param.editedField }">
+				<h2>{{ param.name }}</h2>
+
+				<span class="current">{{ formatFloat(param.current) }}</span>
+				<input v-if="param.editedField === 'target'" type="text" v-model="param.target">
+				<span v-else class="target">{{ formatFloat(param.target) }}</span>
+				<input v-if="param.editedField === 'time'" type="text" v-model="param.time">
+				<span v-else class="time">{{ formatFloat(param.time) }}</span>
+			</div>
+		</div>
+	</main>
+
+	<script src="vue.global.js"></script>
+	<script src="perform.js"></script>
+</body>
+</html>

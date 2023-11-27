@@ -1,0 +1,42 @@
+* {
+	margin: 0;
+	padding: 0;
+
+	font-family: monospace;
+	font-size: 15px;
+	color: white;
+	text-decoration: none;
+}
+
+h1, h2 {
+	font-weight: normal;
+}
+
+body {
+	background: black;
+}
+
+canvas {
+	position: fixed;
+}
+
+.group {
+	padding: 1rem;
+}
+
+.group .param span {
+	margin-right: 1ch;
+}
+
+.group .param:not(.changing) :is(.target, .time) {
+	opacity: 0.3;
+}
+
+.group .param span.edited {
+	opacity: 1 !important;
+	color: red;
+}
+
+.group .param input {
+	background: black;
+}
