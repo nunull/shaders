@@ -12,7 +12,7 @@ const app = createApp({
           time: 1,
           isChanging: false,
           changeStart: null,
-          editedField: '',
+          editedField: 'target',
           editedChar: 0
         }, {
           name: 'speed',
@@ -169,9 +169,19 @@ const app = createApp({
         let param = this.getEditedParam()
         if (!param) return
 
-        param.editedField = ''
+        param.editedField = 'target'
         param.editedChar = 0
+      } else if (event.key === 'ArrowRight') {
+        this.selectNextGroup()
+      } else if (event.key === 'ArrowLeft') {
+        this.selectPreviousGroup()
+      } else if (event.key === 'ArrowUp') {
+        this.selectPreviousParam()
+      } else if (event.key === 'ArrowDown') {
+        this.selectNextParam()
       }
+
+      // console.log(event)
     })
   },
 
@@ -184,26 +194,86 @@ const app = createApp({
         param.editedField = 'time'
         param.editedChar = 0
       } else {
-        param.editedField = ''
+        param.editedField = 'target'
         param.editedChar = 0
 
         this.startChange(param)
       }
     },
 
-    getEditedParam () {
-      let editedParam = null
-
+    getEditedGroup () {
       for (let group of this.groups) {
         for (let param of group.params) {
           if (param.editedField) {
-            editedParam = param
-            break
+            return group
           }
         }
       }
 
-      return editedParam
+      return null
+    },
+
+    getEditedParam () {
+      const group = this.getEditedGroup()
+      if (!group) return null
+
+      for (let param of group.params) {
+        if (param.editedField) {
+          return param
+        }
+      }
+
+      return null
+    },
+
+    selectNextGroup () {
+      const group = this.getEditedGroup()
+      const index = this.groups.indexOf(group)
+      const nextGroup = this.groups[index+1]
+      if (!group || !nextGroup) return
+
+      const param = this.getEditedParam()
+      param.editedField = ''
+
+      this.editParam(nextGroup.params[0])
+    },
+
+    selectPreviousGroup () {
+      const group = this.getEditedGroup()
+      const index = this.groups.indexOf(group)
+      const nextGroup = this.groups[index-1]
+      if (!group || !nextGroup) return
+
+      const param = this.getEditedParam()
+      param.editedField = ''
+
+      this.editParam(nextGroup.params[0])
+    },
+
+    selectNextParam () {
+      const group = this.getEditedGroup()
+      const param = this.getEditedParam()
+      if (!group || !param) return
+
+      const index = group.params.indexOf(param)
+      const nextParam = group.params[index+1]
+      if (!nextParam) return
+
+      param.editedField = ''
+      this.editParam(nextParam)
+    },
+
+    selectPreviousParam () {
+      const group = this.getEditedGroup()
+      const param = this.getEditedParam()
+      if (!group || !param) return
+
+      const index = group.params.indexOf(param)
+      const nextParam = group.params[index-1]
+      if (!nextParam) return
+
+      param.editedField = ''
+      this.editParam(nextParam)
     },
 
     startChange (param) {

@@ -73,7 +73,7 @@ nav * {
 
 .group {
 	border: solid 1px white;
-	padding-bottom: 0.125rem;
+	padding-bottom: 0.25rem;
 	white-space: nowrap;
 }
 
@@ -167,7 +167,7 @@ nav * {
 }
 
 .group .param.changing * {
-	color: pink;
+	color: blue;
 }
 
 /*.group .param .value.edited,*/
