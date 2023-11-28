@@ -17,7 +17,7 @@ function initViewer () {
       let time = 0
 
       sketch.preload = () => {
-        s = sketch.loadShader('default.vert', `${group.name}.frag`)
+        s = sketch.loadShader('../assets/default.vert', `../shaders/${group.name}.frag`)
       }
 
       sketch.setup = () => {

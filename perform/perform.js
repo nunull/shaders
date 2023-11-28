@@ -37,7 +37,7 @@ const app = createApp({
         name: 'b',
         params: [{
           name: 'opacity',
-          current: 1,
+          current: 0,
           target: 1,
           time: 1,
           isChanging: false,
@@ -72,16 +72,56 @@ const app = createApp({
           editedField: '',
           editedChar: 0
         }]
+      }, {
+        name: 'c',
+        params: [{
+          name: 'opacity',
+          current: 0,
+          target: 1,
+          time: 1,
+          isChanging: false,
+          changeStart: null,
+          editedField: '',
+          editedChar: 0
+        }, {
+          name: 'speed',
+          current: 0.5,
+          target: 1,
+          time: 1,
+          isChanging: false,
+          changeStart: null,
+          editedField: '',
+          editedChar: 0
+        }]
+      }, {
+        name: 'd',
+        params: [{
+          name: 'opacity',
+          current: 0,
+          target: 1,
+          time: 1,
+          isChanging: false,
+          changeStart: null,
+          editedField: '',
+          editedChar: 0
+        }, {
+          name: 'speed',
+          current: 0.5,
+          target: 1,
+          time: 1,
+          isChanging: false,
+          changeStart: null,
+          editedField: '',
+          editedChar: 0
+        }]
       }]
     }
   },
 
-  created () {
-    document.querySelectorAll('iframe').forEach(iframeElement => {
-      iframeElement.contentWindow.groups = this.groups
-      iframeElement.contentWindow.addEventListener('load', () => {
-        iframeElement.contentWindow.initViewer()
-      })
+  mounted () { 
+    this.$refs.iframe.contentWindow.groups = this.groups
+    this.$refs.iframe.contentWindow.addEventListener('load', () => {
+      this.$refs.iframe.contentWindow.initViewer()
     })
 
     window.addEventListener('keydown', event => {
@@ -229,7 +269,7 @@ const app = createApp({
     },
 
     openViewer () {
-      const w = window.open(window.location.href + '/view.html')
+      const w = window.open(window.location.href + '/view')
       w.groups = this.groups
     }
   }
