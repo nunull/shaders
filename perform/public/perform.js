@@ -37,7 +37,7 @@ const app = createApp({
         name: 'b',
         params: [{
           name: 'opacity',
-          current: 0,
+          current: 1,
           target: 1,
           time: 1,
           isChanging: false,
@@ -48,6 +48,24 @@ const app = createApp({
           name: 'speed',
           current: 0.5,
           target: 0,
+          time: 1,
+          isChanging: false,
+          changeStart: null,
+          editedField: '',
+          editedChar: 0
+        }, {
+          name: 'dist',
+          current: 0.1,
+          target: 1,
+          time: 1,
+          isChanging: false,
+          changeStart: null,
+          editedField: '',
+          editedChar: 0
+        }, {
+          name: 'height',
+          current: 0.1,
+          target: 1,
           time: 1,
           isChanging: false,
           changeStart: null,
@@ -83,6 +101,8 @@ const app = createApp({
 
         param[param.editedField] = param.editedField === 'time' ? parseInt(valueNew) : Math.max(0, Math.min(1, parseFloat(valueNew)))
 
+        console.log(param[param.editedField])
+
         let nextEditedChar = -1
         for (let i = 0; i < value.length; i++) {
           let c = value[i]
@@ -93,10 +113,14 @@ const app = createApp({
           }
         }
 
+        console.log(param[param.editedField], nextEditedChar)
+
         if (nextEditedChar === -1) {
           this.advanceEditedField()
           return
         }
+
+        console.log(param[param.editedField])
 
         param.editedChar = nextEditedChar
       } else if (event.key === 'Enter') {
@@ -173,7 +197,7 @@ const app = createApp({
     formatParamValue (param, name, plainOutput = false) {
       let s = param[name].toFixed(2)
       if (name === 'time') {
-        s = parseInt(param[name]) //.toFixed(1)
+        s = parseInt(param[name]).toString()
 
         if (param[name] < 10) s = `0${s}`
         if (param[name] < 100) s = `0${s}`
